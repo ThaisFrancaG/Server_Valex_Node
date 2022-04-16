@@ -1,7 +1,8 @@
-import axios from "axios";
 import * as employeeInfo from "../repositories/employeeRepository.js";
 import * as cardInfo from "../repositories/cardRepository.js";
 import { faker } from "@faker-js/faker";
+import bcrypt from "bcrypt";
+import dayjs from "dayjs";
 
 export async function newCard(employeeId: number, cardType: string) {
   checkCardType(cardType);
@@ -10,10 +11,12 @@ export async function newCard(employeeId: number, cardType: string) {
 
   await checkEmployeeCards(employeeId, cardType);
 
-  let newCardInfo = generateCardInfo(employeeData);
+  let newCardInfo = generateCardInfo(employeeData, cardType);
+
+  await cardInfo.insert(newCardInfo);
 }
 
-function checkCardType(cardType: string) {
+function checkCardType(cardType) {
   switch (cardType) {
     case "groceries":
     case "restaurant":
@@ -26,7 +29,7 @@ function checkCardType(cardType: string) {
   }
 }
 
-async function getEmployee(employeeId: number) {
+async function getEmployee(employeeId) {
   const employeeData = await employeeInfo.findById(employeeId);
   if (!employeeData) {
     throw { code: 401, message: "Employee Not Found" };
@@ -34,7 +37,7 @@ async function getEmployee(employeeId: number) {
   return employeeData;
 }
 
-async function checkEmployeeCards(employeeId: number, cardType) {
+async function checkEmployeeCards(employeeId, cardType) {
   const hasCardType = await cardInfo.findByTypeAndEmployeeId(
     cardType,
     employeeId
@@ -45,12 +48,10 @@ async function checkEmployeeCards(employeeId: number, cardType) {
   }
 }
 
-function generateCardInfo(employeeData: any) {
+function generateCardInfo(employeeData, cardType) {
   const cardNumber = faker.finance.creditCardNumber("martercard");
-
   const cardSecurityNumber = faker.finance.creditCardCVV();
-  //usar o faker para gerar o cvv
-  //FALTA CRIPTOGRAFAR
+  const cardCVC = bcrypt.hashSync(cardSecurityNumber, 10);
 
   console.log(cardSecurityNumber);
 
@@ -70,5 +71,17 @@ function generateCardInfo(employeeData: any) {
   }
   const cardName: string = `${firstName} ${nameInitials}${lastName}`;
 
-  console.log(cardName);
+  const expirationDate = dayjs().add(5, "year").format("MM/YY");
+
+  return {
+    employeeId: employeeData.id,
+    number: cardNumber,
+    cardholderName: cardName,
+    securityCode: cardCVC,
+    expirationDate: expirationDate,
+    password: "",
+    isVirtual: false,
+    isBlocked: false,
+    type: cardType,
+  };
 }
