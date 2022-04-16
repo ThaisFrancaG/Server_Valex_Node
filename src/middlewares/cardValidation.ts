@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { cardSchema } from "../schemas/cardSchema.js";
+import * as currentCardInfo from "../repositories/cardRepository.js";
 
 function validateCardSchema(req: Request, res: Response, next: NextFunction) {
   const { cvc, password } = req.body;
@@ -20,4 +21,16 @@ function validateCardSchema(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-export { validateCardSchema };
+async function validateCardId(req: Request, res: Response, next: NextFunction) {
+  const { id } = req.params;
+
+  const cardInfo = await currentCardInfo.findById(parseInt(id));
+
+  if (!cardInfo) {
+    throw { code: 404, message: "Card Not Found" };
+  }
+
+  next();
+}
+
+export { validateCardSchema, validateCardId };
