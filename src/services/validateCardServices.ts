@@ -8,7 +8,8 @@ export async function validateCard(
   password: string
 ) {
   await checkCardStatus(cardId, cardCVC);
-  //aqui eu sei que todos os dados do cartão foram conferidos e estão ok
+
+  await cardValidation(cardId, password);
 }
 
 async function checkCardStatus(cardId: string, cardCVC: string) {
@@ -40,4 +41,11 @@ async function checkCardStatus(cardId: string, cardCVC: string) {
   if (checkPassword.length !== 0) {
     throw { code: 409, message: "Check Your Card Information" };
   }
+}
+
+async function cardValidation(cardId: string, givenPassword: string) {
+  const password = bcrypt.hashSync(givenPassword, 10);
+  const id = parseInt(cardId);
+
+  await currentCardInfo.update(id, { password });
 }
