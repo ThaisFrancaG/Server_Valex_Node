@@ -5,7 +5,6 @@ async function createCard(req: Request, res: Response) {
   const { employeeId, cardType } = req.body;
 
   if (!employeeId || !cardType) {
-    console.log("caiu no caso de entrada vazia");
     return res.sendStatus(422);
   }
 

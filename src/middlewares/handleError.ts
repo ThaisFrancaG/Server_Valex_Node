@@ -6,12 +6,8 @@ export function handleError(
   res: Response,
   next: NextFunction
 ) {
-  console.log("caiu no middleware");
-  console.log(error);
-  console.log(error.code);
-
   if (error) {
-    return res.sendStatus(error.code);
+    return res.status(error.code).send(error.message);
   }
 
   res.sendStatus(500);
