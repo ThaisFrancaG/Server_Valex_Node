@@ -8,9 +8,21 @@ async function createCard(req: Request, res: Response) {
     return res.sendStatus(422);
   }
 
-  let cardInfo = await cardServices.newCard(employeeId, cardType);
+  await cardServices.newCard(employeeId, cardType);
 
-  console.log(cardInfo);
+  res.status(200).send("New Card Added");
+}
+
+async function activateCard(req: Request, res: Response) {
+  const { employeeId, cardType } = req.body;
+
+  if (!employeeId || !cardType) {
+    return res.sendStatus(422);
+  }
+
+  await cardServices.newCard(employeeId, cardType);
+
+  res.status(200).send("New Card Added");
 }
 
 export { createCard };

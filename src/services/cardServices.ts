@@ -5,6 +5,8 @@ import bcrypt from "bcrypt";
 import dayjs from "dayjs";
 
 export async function newCard(employeeId: number, cardType: string) {
+  cardType = cardType.toLowerCase();
+
   checkCardType(cardType);
 
   let employeeData = await getEmployee(employeeId);
@@ -17,6 +19,8 @@ export async function newCard(employeeId: number, cardType: string) {
 }
 
 function checkCardType(cardType) {
+  console.log(cardType);
+
   switch (cardType) {
     case "groceries":
     case "restaurant":
