@@ -8,6 +8,7 @@ export async function validateCard(
   password: string
 ) {
   await checkCardStatus(cardId, cardCVC);
+  //aqui eu sei que todos os dados do cartão foram conferidos e estão ok
 }
 
 async function checkCardStatus(cardId: string, cardCVC: string) {
