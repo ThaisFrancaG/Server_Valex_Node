@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import * as cardServices from "../services/cardServices.js";
-
+import * as cardServices from "../services/newCardServices.js";
+import * as cardValidation from "../services/validateCardServices.js";
 async function createCard(req: Request, res: Response) {
   const { employeeId, cardType } = req.body;
 
@@ -10,19 +10,16 @@ async function createCard(req: Request, res: Response) {
 
   await cardServices.newCard(employeeId, cardType);
 
-  res.status(200).send("New Card Added");
+  res.status(201).send("New Card Added");
 }
 
 async function activateCard(req: Request, res: Response) {
-  const { employeeId, cardType } = req.body;
+  const { cvc, password } = req.body;
+  const { id } = req.params;
 
-  if (!employeeId || !cardType) {
-    return res.sendStatus(422);
-  }
+  await cardValidation.validateCard(id, cvc, password);
 
-  await cardServices.newCard(employeeId, cardType);
-
-  res.status(200).send("New Card Added");
+  res.status(202).send("Card Validated");
 }
 
-export { createCard };
+export { createCard, activateCard };
