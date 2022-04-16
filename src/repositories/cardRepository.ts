@@ -43,6 +43,8 @@ export async function findByTypeAndEmployeeId(
   type: TransactionTypes,
   employeeId: number
 ) {
+  console.log("check format on repositorie");
+  console.log(type + employeeId);
   const result = await connection.query<Card, [TransactionTypes, number]>(
     `SELECT * FROM cards WHERE type=$1 AND "employeeId"=$2`,
     [type, employeeId]
