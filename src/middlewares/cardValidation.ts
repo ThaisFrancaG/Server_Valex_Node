@@ -1,6 +1,7 @@
+import { NextFunction, Request, Response } from "express";
 import { cardSchema } from "../schemas/cardSchema.js";
 
-function validateCardSchema(req, res, next) {
+function validateCardSchema(req: Request, res: Response, next: NextFunction) {
   const { cvc, password } = req.body;
 
   const validation = cardSchema.validate({ cvc, password });

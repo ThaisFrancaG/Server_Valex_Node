@@ -104,7 +104,6 @@ export async function insert(cardData: CardInsertData) {
 }
 
 export async function update(id: number, cardData: CardUpdateData) {
-  console.log("chegou no repositorio certo");
   const { objectColumns: cardColumns, objectValues: cardValues } =
     mapObjectToUpdateQuery({
       object: cardData,
