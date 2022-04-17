@@ -1,26 +1,36 @@
 import { NextFunction, Request, Response } from "express";
-import { purchaseSchema, rechargeSchema } from "../schemas/cardValuesSchema.js";
+import { rechargeSchema, purchaseSchema } from "../schemas/cardValuesSchema.js";
 
-function validateValueSchema(req: Request, res: Response, next: NextFunction) {
-  const operation = Object.keys(req.body)[0];
-  const value = Object.values(req.body)[0];
-
-  const toValidate =
-    operation === "recharge" ? { recharge: value } : { purchase: value };
-
-  const validation =
-    operation === "recharge"
-      ? rechargeSchema.validate(toValidate)
-      : purchaseSchema.validate(toValidate);
-
+function validateRechargeSchema(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  let recharge = req.body.recharge;
+  const validation = rechargeSchema.validate({ recharge });
   if (validation.error) {
-    console.log(validation.error);
     return res.sendStatus(422);
   }
-  if (value <= 0) {
-    throw { code: 400, message: "Value Must Be Greater Than 0" };
+  if (recharge <= 0) {
+    throw { code: 400, message: "Recharge Must Be Greater Than 0" };
   }
   next();
 }
 
-export { validateValueSchema };
+function validatePurchaseSchema(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  let { purchase, password } = req.body;
+  const validation = purchaseSchema.validate({ purchase, password });
+  if (validation.error) {
+    return res.sendStatus(422);
+  }
+  if (purchase <= 0) {
+    throw { code: 400, message: "Purchase Must Be Greater Than 0" };
+  }
+  next();
+}
+
+export { validateRechargeSchema, validatePurchaseSchema };

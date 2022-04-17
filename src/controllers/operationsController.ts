@@ -10,4 +10,13 @@ async function rechargeCard(req: Request, res: Response) {
   res.sendStatus(202);
 }
 
-export { rechargeCard };
+async function purchase(req: Request, res: Response) {
+  const { id, businessId } = req.params;
+  const { purchase } = req.body;
+
+  console.log(id);
+  console.log(businessId);
+
+  res.sendStatus(202);
+}
+export { rechargeCard, purchase };

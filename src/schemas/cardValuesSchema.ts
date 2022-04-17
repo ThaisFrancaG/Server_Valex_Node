@@ -6,6 +6,7 @@ const rechargeSchema = joi.object({
 
 const purchaseSchema = joi.object({
   purchase: joi.number().required(),
+  password: joi.string().required(),
 });
 
 export { rechargeSchema, purchaseSchema };
