@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { cardSchema } from "../schemas/cardSchema.js";
+import dayjs from "dayjs";
+
 import * as currentCardInfo from "../repositories/cardRepository.js";
 
 function validateCardSchema(req: Request, res: Response, next: NextFunction) {
@@ -21,7 +23,11 @@ function validateCardSchema(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-async function validateCardId(req: Request, res: Response, next: NextFunction) {
+async function validateCardDetails(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const { id } = req.params;
 
   const cardInfo = await currentCardInfo.findById(parseInt(id));
@@ -30,7 +36,12 @@ async function validateCardId(req: Request, res: Response, next: NextFunction) {
     throw { code: 404, message: "Card Not Found" };
   }
 
+  const checkExpiration = dayjs().format("MM/YY") > cardInfo.expirationDate;
+
+  if (checkExpiration) {
+    throw { code: 401, message: "Check Your Card Date" };
+  }
   next();
 }
 
-export { validateCardSchema, validateCardId };
+export { validateCardSchema, validateCardDetails };

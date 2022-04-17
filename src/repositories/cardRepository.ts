@@ -81,7 +81,6 @@ export async function insert(cardData: CardInsertData) {
     type,
   } = cardData;
 
-  console.log("chegou no repositorio");
   connection.query(
     `
     INSERT INTO cards ("employeeId", number, "cardholderName", "securityCode",
@@ -109,7 +108,6 @@ export async function update(id: number, cardData: CardUpdateData) {
       object: cardData,
       offset: 2,
     });
-  console.log(cardValues);
 
   connection.query(
     `

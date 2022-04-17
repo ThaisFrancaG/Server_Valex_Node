@@ -20,15 +20,10 @@ async function checkCardStatus(cardId: string, cardCVC: string) {
   }
 
   let checkCVC = bcrypt.compareSync(cardCVC, cardInfo.securityCode);
-  console.log(checkCVC);
 
   if (!checkCVC) {
     throw { code: 401, message: "Check Your Information" };
   }
-
-  console.log(cardInfo);
-  const currentDate = dayjs().format("MM/YY");
-  console.log(currentDate);
 
   const checkExpiration = dayjs().format("MM/YY") > cardInfo.expirationDate;
 

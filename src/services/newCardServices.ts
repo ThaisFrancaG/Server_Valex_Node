@@ -19,8 +19,6 @@ export async function newCard(employeeId: number, cardType: string) {
 }
 
 function checkCardType(cardType) {
-  console.log(cardType);
-
   switch (cardType) {
     case "groceries":
     case "restaurant":

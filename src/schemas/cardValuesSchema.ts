@@ -4,4 +4,8 @@ const rechargeSchema = joi.object({
   recharge: joi.number().required(),
 });
 
-export { rechargeSchema };
+const purchaseSchema = joi.object({
+  purchase: joi.number().required(),
+});
+
+export { rechargeSchema, purchaseSchema };
