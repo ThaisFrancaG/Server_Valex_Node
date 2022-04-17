@@ -41,6 +41,10 @@ async function validateCardDetails(
   if (checkExpiration) {
     throw { code: 401, message: "Check Your Card Date" };
   }
+
+  if (cardInfo.isBlocked) {
+    throw { code: 401, message: "Card is Blocked" };
+  }
   next();
 }
 
