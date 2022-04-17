@@ -1,7 +1,11 @@
 import Router from "express";
 import { validateCardDetails } from "../middlewares/cardValidation.js";
 import { companyAPIValidation } from "../middlewares/companyAPIValidation.js";
-import { rechargeCard, purchase } from "../controllers/operationsController.js";
+import {
+  rechargeCard,
+  purchase,
+  checkBalance,
+} from "../controllers/operationsController.js";
 import {
   validateRechargeSchema,
   validatePurchaseSchema,
@@ -24,5 +28,7 @@ operationsRouter.post(
   validatePurchaseSchema,
   purchase
 );
+
+operationsRouter.get("/card/:id/balance", validateCardDetails, checkBalance);
 
 export default operationsRouter;

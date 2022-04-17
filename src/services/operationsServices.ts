@@ -3,10 +3,7 @@ import * as currentCardInfo from "../repositories/cardRepository.js";
 import * as businessRepositorie from "../repositories/businessRepository.js";
 import * as rechargeRepositorie from "../repositories/rechargeRepository.js";
 import * as purchaseRepositorie from "../repositories/paymentRepository.js";
-
 import bcrypt from "bcrypt";
-
-import dayjs from "dayjs";
 
 export async function newRecharge(id: number, rechargeValue: number) {
   await rechargeInfo.insert({ cardId: id, amount: rechargeValue });
@@ -22,8 +19,19 @@ export async function newPurchase(
 
   checkCardPassword(password, cardInfo);
   await checkBusinessInfo(businessId, cardInfo);
-  const balance = await checkCardBalance(id);
-  await makePurchase(id, businessId, balance, purchaseValue);
+  const cardHistory = await checkCardBalance(id);
+  await makePurchase(
+    id,
+    businessId,
+    cardHistory.balance,
+    purchaseValue,
+    cardInfo
+  );
+}
+
+export async function cardBalance(id: number) {
+  let cardHistory = checkCardBalance(id);
+  return cardHistory;
 }
 
 async function checkCardBalance(id: number) {
@@ -40,8 +48,12 @@ async function checkCardBalance(id: number) {
   purchases.map((purchase) => {
     totalPurchases = totalPurchases + purchase.amount;
   });
-
-  return totalRecharges - totalPurchases;
+  const balanceInfo = {
+    balance: totalRecharges - totalPurchases,
+    transactions: purchases,
+    recharges: recharges,
+  };
+  return balanceInfo;
 }
 
 function checkCardPassword(password: string, cardInfo: any) {
@@ -71,8 +83,12 @@ async function makePurchase(
   id: number,
   businessId: number,
   balance: number,
-  purchaseValue: number
+  purchaseValue: number,
+  cardInfo: any
 ) {
+  if (cardInfo.isBlocked) {
+    throw { code: 401, message: "Card is Blocked" };
+  }
   if (balance - purchaseValue <= 0) {
     throw { code: 401, message: "Insuficient Funds" };
   }

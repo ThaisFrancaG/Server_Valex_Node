@@ -13,7 +13,6 @@ async function rechargeCard(req: Request, res: Response) {
 async function purchase(req: Request, res: Response) {
   const { id, businessId } = req.params;
   const { purchase, password } = req.body;
-  9;
   await cardOperations.newPurchase(
     parseInt(id),
     parseInt(businessId),
@@ -22,4 +21,13 @@ async function purchase(req: Request, res: Response) {
   );
   res.sendStatus(202);
 }
-export { rechargeCard, purchase };
+
+async function checkBalance(req: Request, res: Response) {
+  const { id } = req.params;
+
+  const cardHistory = await cardOperations.cardBalance(parseInt(id));
+
+  console.log(cardHistory);
+  res.status(200).send(cardHistory);
+}
+export { rechargeCard, purchase, checkBalance };
