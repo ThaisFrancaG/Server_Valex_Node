@@ -8,9 +8,9 @@ async function createCard(req: Request, res: Response) {
     return res.sendStatus(422);
   }
 
-  await cardServices.newCard(employeeId, cardType);
+  const newCardInfo = await cardServices.newCard(employeeId, cardType);
 
-  res.status(201).send("New Card Added");
+  res.status(201).send(newCardInfo);
 }
 
 async function activateCard(req: Request, res: Response) {
