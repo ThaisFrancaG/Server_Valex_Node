@@ -27,7 +27,6 @@ async function checkBalance(req: Request, res: Response) {
 
   const cardHistory = await cardOperations.cardBalance(parseInt(id));
 
-  console.log(cardHistory);
   res.status(200).send(cardHistory);
 }
 export { rechargeCard, purchase, checkBalance };

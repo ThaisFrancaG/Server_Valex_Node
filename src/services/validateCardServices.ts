@@ -38,7 +38,7 @@ async function checkCardStatus(cardId: string, cardCVC: string) {
   }
 }
 
-async function cardValidation(cardId: string, givenPassword: string) {
+export async function cardValidation(cardId: string, givenPassword: string) {
   const password = bcrypt.hashSync(givenPassword, 10);
   const id = parseInt(cardId);
 

@@ -13,9 +13,11 @@ export async function newCard(employeeId: number, cardType: string) {
 
   await checkEmployeeCards(employeeId, cardType);
 
-  let newCardInfo = generateCardInfo(employeeData, cardType);
+  const newCardInfo = generateCardInfo(employeeData, cardType);
 
   await cardInfo.insert(newCardInfo);
+
+  return;
 }
 
 function checkCardType(cardType) {
@@ -55,8 +57,6 @@ function generateCardInfo(employeeData, cardType) {
   const cardSecurityNumber = faker.finance.creditCardCVV();
   const cardCVC = bcrypt.hashSync(cardSecurityNumber, 10);
 
-  console.log(cardSecurityNumber);
-
   let nameArray = employeeData.fullName.split(" ");
   let nameLength = nameArray.length;
 
@@ -86,4 +86,10 @@ function generateCardInfo(employeeData, cardType) {
     isBlocked: false,
     type: cardType,
   };
+  // {
+  //   number: cardNumber,
+  //   cardholderName: cardName,
+  //   securityCode: cardSecurityNumber,
+  //   expirationDate: expirationDate,
+  // }
 }

@@ -1,8 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { cardSchema } from "../schemas/cardSchema.js";
+import { cardSchema, newCardSchema } from "../schemas/cardSchema.js";
 import dayjs from "dayjs";
 
 import * as currentCardInfo from "../repositories/cardRepository.js";
+
+function validateNewCard(req: Request, res: Response, next: NextFunction) {
+  const { employeeId, cardType } = req.body;
+
+  const validation = newCardSchema.validate({ employeeId, cardType });
+  if (validation.error) {
+    return res.sendStatus(422);
+  }
+
+  next();
+}
 
 function validateCardSchema(req: Request, res: Response, next: NextFunction) {
   const { cvc, password } = req.body;
@@ -45,4 +56,4 @@ async function validateCardDetails(
   next();
 }
 
-export { validateCardSchema, validateCardDetails };
+export { validateCardSchema, validateCardDetails, validateNewCard };
